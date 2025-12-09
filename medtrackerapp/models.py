@@ -106,7 +106,7 @@ class Medication(models.Model):
             return {"error": str(exc)}
 
 
-class DoseLog(models.Model):
+class DoseLog(models.Mode):
     """
     Records the administration of a medication dose.
 
