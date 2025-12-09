@@ -127,3 +127,21 @@ class DoseLog(models.Model):
         status = "Taken" if self.was_taken else "Missed"
         when = timezone.localtime(self.taken_at).strftime("%Y-%m-%d %H:%M")
         return f"{self.medication.name} at {when} - {status}"
+    
+
+class Note(models.Model):
+    medication = models.ForeignKey(
+        "Medication",
+        on_delete=models.CASCADE,
+        related_name="notes",
+    )
+    text = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Doctor's note"
+        verbose_name_plural = "Doctor's notes"
+
+    def __str__(self):
+        return f"Note for {self.medication.name}: {self.text[:30]}"

@@ -1,9 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
-from .models import Medication, DoseLog
-from .serializers import MedicationSerializer, DoseLogSerializer
+from .models import Medication, DoseLog, Note
+from medtrackerapp.models import Medication
+from .serializers import MedicationSerializer, DoseLogSerializer, NoteSerializer
 
 class MedicationViewSet(viewsets.ModelViewSet):
     """
@@ -23,6 +24,21 @@ class MedicationViewSet(viewsets.ModelViewSet):
     """
     queryset = Medication.objects.all()
     serializer_class = MedicationSerializer
+
+    def _parse_days_param(self, request):
+        days_param = request.query_params.get("days")
+        if days_param is None:
+            raise ValueError("Query parameter 'days' is required.")
+
+        try:
+            days = int(days_param)
+        except (TypeError, ValueError):
+            raise ValueError("Query parameter 'days' must be a positive integer.")
+
+        if days <= 0:
+            raise ValueError("Query parameter 'days' must be a positive integer.")
+
+        return days
 
     @action(detail=True, methods=["get"], url_path="info")
     def get_external_info(self, request, pk=None):
@@ -50,7 +66,35 @@ class MedicationViewSet(viewsets.ModelViewSet):
         if isinstance(data, dict) and data.get("error"):
             return Response(data, status=status.HTTP_502_BAD_GATEWAY)
         return Response(data)
+    
+    @action(detail=True, methods=["get"], url_path="expected-doses")
+    def expected_doses(self, request, pk=None):
+        medication = self.get_object()
 
+        try:
+            days = self._parse_days_param(request)
+        except ValueError as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            expected = medication.expected_doses(days)
+        except ValueError as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {
+                "medication_id": medication.id,
+                "days": days,
+                "expected_doses": expected,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 class DoseLogViewSet(viewsets.ModelViewSet):
     """
@@ -105,3 +149,26 @@ class DoseLogViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(logs, many=True)
         return Response(serializer.data)
+    
+class NoteViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    API endpoint for viewing and managing doctor's notes.
+
+    Notes are simple annotations attached to a medication.
+    Supported operations:
+        - GET /notes/          - list all notes
+        - GET /notes/{id}/     - retrieve a single note
+        - POST /notes/         - create a new note
+        - DELETE /notes/{id}/  - delete a note
+
+    Updating existing notes is intentionally not supported.
+    """
+
+    queryset = Note.objects.select_related("medication").all()
+    serializer_class = NoteSerializer
