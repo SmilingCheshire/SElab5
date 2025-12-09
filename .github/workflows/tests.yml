@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        image: local/postgres:16
         env:
           POSTGRES_USER: avalon
           POSTGRES_PASSWORD: Init#123
