@@ -101,9 +101,8 @@ class NoteModelTests(TestCase):
 
         self.medication = Medication.objects.create(
             name="Test medication",
-            dose_mg=10,
+            dosage_mg=10,
             prescribed_per_day=2,
-
         )
 
     def test_creating_note_links_to_medication_and_sets_date(self):

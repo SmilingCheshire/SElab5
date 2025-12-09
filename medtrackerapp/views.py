@@ -1,10 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
-from .models import Medication, DoseLog
+from .models import Medication, DoseLog, Note
 from medtrackerapp.models import Medication
-from .serializers import MedicationSerializer, DoseLogSerializer
+from .serializers import MedicationSerializer, DoseLogSerializer, NoteSerializer
 
 class MedicationViewSet(viewsets.ModelViewSet):
     """
@@ -149,3 +149,27 @@ class DoseLogViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(logs, many=True)
         return Response(serializer.data)
+    
+class NoteViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    API endpoint for viewing and managing doctor's notes.
+
+    Notes are simple annotations attached to a medication.
+    Supported operations:
+        - GET /notes/          - list all notes
+        - GET /notes/{id}/     - retrieve a single note
+        - POST /notes/         - create a new note
+        - DELETE /notes/{id}/  - delete a note
+
+    Updating existing notes is intentionally not supported.
+    """
+
+    queryset = Note.objects.all().order_by("-created_at")
+    serializer_class = NoteSerializer
+
