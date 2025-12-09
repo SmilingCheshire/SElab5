@@ -1,8 +1,10 @@
+from datetime import date
+
 from django.test import TestCase
 from django.utils import timezone
 from datetime import timedelta
 
-from medtrackerapp.models import Medication, DoseLog
+from medtrackerapp.models import Medication, DoseLog, Note
 
 
 class MedicationModelTests(TestCase):
@@ -92,3 +94,35 @@ class DoseLogModelTests(TestCase):
         DoseLog.objects.create(medication=med, taken_at=now)
 
         self.assertEqual(med.doselog_set.count(), 2)
+
+
+class NoteModelTests(TestCase):
+    def setUp(self):
+
+        self.medication = Medication.objects.create(
+            name="Test medication",
+            dose_mg=10,
+            prescribed_per_day=2,
+
+        )
+
+    def test_creating_note_links_to_medication_and_sets_date(self):
+        note = Note.objects.create(
+            medication=self.medication,
+            text="Patient reports mild headache."
+        )
+
+        self.assertEqual(note.medication, self.medication)
+        self.assertEqual(note.text, "Patient reports mild headache.")
+        self.assertIsNotNone(note.created_at)
+        self.assertEqual(note.created_at, date.today())
+
+    def test_deleting_medication_deletes_notes(self):
+        Note.objects.create(
+            medication=self.medication,
+            text="Some note"
+        )
+
+        self.medication.delete()
+
+        self.assertEqual(Note.objects.count(), 0)
