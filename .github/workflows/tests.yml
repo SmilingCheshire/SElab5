@@ -14,13 +14,13 @@ jobs:
       postgres:
         image: postgres:18
         env:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: K8tU^xj9oSN$
+          POSTGRES_USER: avalon
+          POSTGRES_PASSWORD: Init#123
           POSTGRES_DB: appdb
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U django -d testdb"
+          --health-cmd="pg_isready -U admin django -d testdb"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
