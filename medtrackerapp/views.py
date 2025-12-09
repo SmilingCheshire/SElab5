@@ -25,6 +25,21 @@ class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
     serializer_class = MedicationSerializer
 
+    def _parse_days_param(self, request):
+        days_param = request.query_params.get("days")
+        if days_param is None:
+            raise ValueError("Query parameter 'days' is required.")
+
+        try:
+            days = int(days_param)
+        except (TypeError, ValueError):
+            raise ValueError("Query parameter 'days' must be a positive integer.")
+
+        if days <= 0:
+            raise ValueError("Query parameter 'days' must be a positive integer.")
+
+        return days
+
     @action(detail=True, methods=["get"], url_path="info")
     def get_external_info(self, request, pk=None):
         """
@@ -54,41 +69,16 @@ class MedicationViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=["get"], url_path="expected-doses")
     def expected_doses(self, request, pk=None):
-        """
-        Returns expected number of doses for a given medication and number of days.
-
-        Query params:
-          - days (required, positive integer)
-
-        Responses:
-          200: { "medication_id": ..., "days": ..., "expected_doses": ... }
-          400: { "detail": <error message> }
-        """
         medication = self.get_object()
 
-        days_param = request.query_params.get("days")
-        if days_param is None:
-            return Response(
-                {"detail": "Query parameter 'days' is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # parse as int
         try:
-            days = int(days_param)
-        except (TypeError, ValueError):
+            days = self._parse_days_param(request)
+        except ValueError as e:
             return Response(
-                {"detail": "Query parameter 'days' must be a positive integer."},
+                {"detail": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if days <= 0:
-            return Response(
-                {"detail": "Query parameter 'days' must be a positive integer."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # delegate to model method; handle ValueError
         try:
             expected = medication.expected_doses(days)
         except ValueError as e:
@@ -105,8 +95,6 @@ class MedicationViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK,
         )
-
-
 
 class DoseLogViewSet(viewsets.ModelViewSet):
     """
