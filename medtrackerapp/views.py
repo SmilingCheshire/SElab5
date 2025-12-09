@@ -170,6 +170,5 @@ class NoteViewSet(
     Updating existing notes is intentionally not supported.
     """
 
-    queryset = Note.objects.all().order_by("-created_at")
+    queryset = Note.objects.select_related("medication").all()
     serializer_class = NoteSerializer
-

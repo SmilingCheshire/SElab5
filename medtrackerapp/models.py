@@ -138,6 +138,10 @@ class Note(models.Model):
     text = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Doctor's note"
+        verbose_name_plural = "Doctor's notes"
+
     def __str__(self):
-        # Simple but helpful for debugging/admin
-        return f"Note({self.medication_id}): {self.text[:30]}"
+        return f"Note for {self.medication.name}: {self.text[:30]}"
