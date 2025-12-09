@@ -4,6 +4,8 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
+from unittest.mock import patch
+
 
 from medtrackerapp.models import Medication, DoseLog
 
@@ -113,6 +115,68 @@ class MedicationViewTests(APITestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    
+    def test_expected_doses_valid_days(self):
+        """
+        GET /api/medications/<id>/expected-doses/?days=7
+        should return 200 and a JSON with medication_id, days, expected_doses.
+        """
+        url = reverse("medication-expected-doses", args=[self.med.id])
+
+        response = self.client.get(url, {"days": 7})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["medication_id"], self.med.id)
+        self.assertEqual(response.data["days"], 7)
+        # expected_doses must be an int
+        self.assertIsInstance(response.data["expected_doses"], int)
+
+    def test_expected_doses_missing_days_param_returns_400(self):
+        """
+        Missing ?days=... should return 400.
+        """
+        url = reverse("medication-expected-doses", args=[self.med.id])
+
+        response = self.client.get(url)  # no query params
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("days", response.data["detail"].lower())
+
+    def test_expected_doses_non_integer_days_returns_400(self):
+        """
+        Non-integer days should return 400.
+        """
+        url = reverse("medication-expected-doses", args=[self.med.id])
+
+        response = self.client.get(url, {"days": "abc"})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("integer", response.data["detail"].lower())
+
+    def test_expected_doses_non_positive_days_returns_400(self):
+        """
+        days <= 0 should return 400.
+        """
+        url = reverse("medication-expected-doses", args=[self.med.id])
+
+        response = self.client.get(url, {"days": 0})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("positive", response.data["detail"].lower())
+
+    def test_expected_doses_value_error_from_model_returns_400(self):
+        """
+        If Medication.expected_doses raises ValueError,
+        the endpoint should return 400.
+        """
+        url = reverse("medication-expected-doses", args=[self.med.id])
+
+        with patch.object(Medication, "expected_doses", side_effect=ValueError("boom")):
+            response = self.client.get(url, {"days": 5})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("boom", response.data["detail"])
 
 
 class DoseLogViewTests(APITestCase):
