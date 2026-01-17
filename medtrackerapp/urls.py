@@ -21,6 +21,7 @@ def days_since(date):
 
 router = DefaultRouter()
 router.register(r'medications', views.MedicationViewSet, basename='medication')
+router.register(r'doselogs', views.DoseLogViewSet, basename='doselog')
 router.register(r'notes', views.NoteViewSet, basename='note')
 
 urlpatterns = [
