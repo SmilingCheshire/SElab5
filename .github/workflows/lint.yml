@@ -28,4 +28,4 @@ jobs:
       - name: Run Ruff Formatting Check
         run: |
           source venv/bin/activate
-          ruff format --check-diff .
+          ruff format --check .
