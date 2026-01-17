@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import timedelta
 
 from rest_framework.test import APITestCase
 from django.urls import reverse

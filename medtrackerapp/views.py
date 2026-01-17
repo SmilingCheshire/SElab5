@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
 from .models import Medication, DoseLog, Note
-from medtrackerapp.models import Medication
 from .serializers import MedicationSerializer, DoseLogSerializer, NoteSerializer
 from rest_framework.filters import SearchFilter
 
