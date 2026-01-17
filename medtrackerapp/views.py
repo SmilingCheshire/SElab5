@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
 from .models import Medication, DoseLog, Note
@@ -182,3 +183,29 @@ class NoteViewSet(
     search_fields = ["medication__name"]
     queryset = Note.objects.select_related("medication").all()
     serializer_class = NoteSerializer
+
+@api_view(["GET", "POST"])
+def note_list(request):
+    if request.method == "GET":
+        notes = Note.objects.all()
+        serializer = NoteSerializer(notes, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        serializer = NoteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)
+
+
+@api_view(["GET", "DELETE"])
+def note_detail(request, pk):
+    note = Note.objects.get(pk=pk)
+
+    if request.method == "GET":
+        serializer = NoteSerializer(note)
+        return Response(serializer.data)
+
+    if request.method == "DELETE":
+        note.delete()
+        return Response(status=204)
