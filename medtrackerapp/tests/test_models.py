@@ -8,7 +8,6 @@ from medtrackerapp.models import Medication, DoseLog, Note
 
 
 class MedicationModelTests(TestCase):
-
     def test_str_returns_name_and_dosage(self):
         med = Medication.objects.create(
             name="Aspirin",
@@ -98,7 +97,6 @@ class DoseLogModelTests(TestCase):
 
 class NoteModelTests(TestCase):
     def setUp(self):
-
         self.medication = Medication.objects.create(
             name="Test medication",
             dosage_mg=10,
@@ -107,8 +105,7 @@ class NoteModelTests(TestCase):
 
     def test_creating_note_links_to_medication_and_sets_date(self):
         note = Note.objects.create(
-            medication=self.medication,
-            text="Patient reports mild headache."
+            medication=self.medication, text="Patient reports mild headache."
         )
 
         self.assertEqual(note.medication, self.medication)
@@ -117,10 +114,7 @@ class NoteModelTests(TestCase):
         self.assertEqual(note.created_at, date.today())
 
     def test_deleting_medication_deletes_notes(self):
-        Note.objects.create(
-            medication=self.medication,
-            text="Some note"
-        )
+        Note.objects.create(medication=self.medication, text="Some note")
 
         self.medication.delete()
 
