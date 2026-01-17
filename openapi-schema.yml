@@ -1,600 +1,479 @@
-openapi: 3.0.2
+swagger: '2.0'
 info:
-  title: ''
-  version: ''
+  title: Software engineering lab
+  description: API documentation for the lab
+  version: v1
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
 paths:
-  /api/medications/:
+  /logs/:
     get:
-      operationId: listMedications
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
+      operationId: logs_list
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
       parameters: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DoseLog'
       tags:
-      - api
+      - logs
     post:
-      operationId: createMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Medication'
+      operationId: logs_create
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoseLog'
       responses:
         '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            $ref: '#/definitions/DoseLog'
       tags:
-      - api
-  /api/medications/{id}/:
+      - logs
+    parameters: []
+  /logs/filter/:
     get:
-      operationId: retrieveMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this medication.
-        schema:
-          type: string
+      operationId: logs_filter_by_date
+      summary: Retrieve all dose logs within a given date range.
+      description: |-
+        Query Parameters:
+            - start (YYYY-MM-DD): Start date of the range (inclusive).
+            - end (YYYY-MM-DD): End date of the range (inclusive).
+      parameters: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DoseLog'
       tags:
-      - api
+      - logs
+    parameters: []
+  /logs/{id}/:
+    get:
+      operationId: logs_read
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoseLog'
+      tags:
+      - logs
     put:
-      operationId: updateMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
+      operationId: logs_update
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
       parameters:
-      - name: id
-        in: path
+      - name: data
+        in: body
         required: true
-        description: A unique integer value identifying this medication.
         schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Medication'
+          $ref: '#/definitions/DoseLog'
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            $ref: '#/definitions/DoseLog'
       tags:
-      - api
+      - logs
     patch:
-      operationId: partialUpdateMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
+      operationId: logs_partial_update
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
       parameters:
-      - name: id
-        in: path
+      - name: data
+        in: body
         required: true
-        description: A unique integer value identifying this medication.
         schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Medication'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Medication'
+          $ref: '#/definitions/DoseLog'
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            $ref: '#/definitions/DoseLog'
       tags:
-      - api
+      - logs
     delete:
-      operationId: destroyMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
-        Provides standard CRUD operations via the Django REST Framework
-
-        `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this medication.
-        schema:
-          type: string
+      operationId: logs_delete
+      summary: API endpoint for viewing and managing dose logs.
+      description: |-
+        A DoseLog represents an event where a medication dose was either
+        taken or missed. This viewset provides standard CRUD operations
+        and a custom filtering action by date range.
+      parameters: []
       responses:
         '204':
           description: ''
       tags:
-      - api
-  /api/medications/{id}/expected-doses/:
+      - logs
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dose log.
+      required: true
+      type: integer
+  /medications/:
     get:
-      operationId: expectedDosesMedication
-      description: 'API endpoint for viewing and managing medications.
-
-
+      operationId: medications_list
+      summary: API endpoint for viewing and managing medications.
+      description: |-
         Provides standard CRUD operations via the Django REST Framework
-
         `ModelViewSet`, as well as a custom action for retrieving
-
-        additional information from an external API (OpenFDA).'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this medication.
-        schema:
-          type: string
+        additional information from an external API (OpenFDA).
+      parameters: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    post:
+      operationId: medications_create
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    parameters: []
+  /medications/{id}/:
+    get:
+      operationId: medications_read
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    put:
+      operationId: medications_update
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    patch:
+      operationId: medications_partial_update
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    delete:
+      operationId: medications_delete
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters: []
+      responses:
+        '204':
           description: ''
       tags:
-      - api
-  /api/medications/{id}/info/:
+      - medications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /medications/{id}/expected-doses/:
     get:
-      operationId: getExternalInfoMedication
-      description: 'Retrieve external drug information from the OpenFDA API.
-
-
+      operationId: medications_expected_doses
+      summary: API endpoint for viewing and managing medications.
+      description: |-
+        Provides standard CRUD operations via the Django REST Framework
+        `ModelViewSet`, as well as a custom action for retrieving
+        additional information from an external API (OpenFDA).
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /medications/{id}/info/:
+    get:
+      operationId: medications_get_external_info
+      summary: Retrieve external drug information from the OpenFDA API.
+      description: |-
         Calls the `Medication.fetch_external_info()` method, which
-
-        delegates to the `DrugInfoService` for API access.'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this medication.
-        schema:
-          type: string
+        delegates to the `DrugInfoService` for API access.
+      parameters: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Medication'
           description: ''
+          schema:
+            $ref: '#/definitions/Medication'
       tags:
-      - api
-  /api/doselogs/:
+      - medications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /notes/:
     get:
-      operationId: listDoseLogs
-      description: 'API endpoint for viewing and managing dose logs.
+      operationId: notes_list
+      summary: API endpoint for viewing and managing doctor's notes.
+      description: |-
+        Notes are simple annotations attached to a medication.
+        Supported operations:
+            - GET /notes/          - list all notes
+            - GET /notes/{id}/     - retrieve a single note
+            - POST /notes/         - create a new note
+            - DELETE /notes/{id}/  - delete a note
 
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters: []
+        Updating existing notes is intentionally not supported.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DoseLog'
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
       tags:
-      - api
+      - notes
     post:
-      operationId: createDoseLog
-      description: 'API endpoint for viewing and managing dose logs.
+      operationId: notes_create
+      summary: API endpoint for viewing and managing doctor's notes.
+      description: |-
+        Notes are simple annotations attached to a medication.
+        Supported operations:
+            - GET /notes/          - list all notes
+            - GET /notes/{id}/     - retrieve a single note
+            - POST /notes/         - create a new note
+            - DELETE /notes/{id}/  - delete a note
 
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
+        Updating existing notes is intentionally not supported.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Note'
       responses:
         '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DoseLog'
           description: ''
+          schema:
+            $ref: '#/definitions/Note'
       tags:
-      - api
-  /api/doselogs/filter/:
+      - notes
+    parameters: []
+  /notes/{id}/:
     get:
-      operationId: filterByDateDoseLog
-      description: "Retrieve all dose logs within a given date range.\n\nQuery Parameters:\n\
-        \    - start (YYYY-MM-DD): Start date of the range (inclusive).\n    - end\
-        \ (YYYY-MM-DD): End date of the range (inclusive)."
+      operationId: notes_read
+      summary: API endpoint for viewing and managing doctor's notes.
+      description: |-
+        Notes are simple annotations attached to a medication.
+        Supported operations:
+            - GET /notes/          - list all notes
+            - GET /notes/{id}/     - retrieve a single note
+            - POST /notes/         - create a new note
+            - DELETE /notes/{id}/  - delete a note
+
+        Updating existing notes is intentionally not supported.
       parameters: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DoseLog'
           description: ''
+          schema:
+            $ref: '#/definitions/Note'
       tags:
-      - api
-  /api/doselogs/{id}/:
-    get:
-      operationId: retrieveDoseLog
-      description: 'API endpoint for viewing and managing dose logs.
-
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this dose log.
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DoseLog'
-          description: ''
-      tags:
-      - api
-    put:
-      operationId: updateDoseLog
-      description: 'API endpoint for viewing and managing dose logs.
-
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this dose log.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DoseLog'
-          description: ''
-      tags:
-      - api
-    patch:
-      operationId: partialUpdateDoseLog
-      description: 'API endpoint for viewing and managing dose logs.
-
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this dose log.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DoseLog'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DoseLog'
-          description: ''
-      tags:
-      - api
+      - notes
     delete:
-      operationId: destroyDoseLog
-      description: 'API endpoint for viewing and managing dose logs.
+      operationId: notes_delete
+      summary: API endpoint for viewing and managing doctor's notes.
+      description: |-
+        Notes are simple annotations attached to a medication.
+        Supported operations:
+            - GET /notes/          - list all notes
+            - GET /notes/{id}/     - retrieve a single note
+            - POST /notes/         - create a new note
+            - DELETE /notes/{id}/  - delete a note
 
-
-        A DoseLog represents an event where a medication dose was either
-
-        taken or missed. This viewset provides standard CRUD operations
-
-        and a custom filtering action by date range.'
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this dose log.
-        schema:
-          type: string
+        Updating existing notes is intentionally not supported.
+      parameters: []
       responses:
         '204':
           description: ''
       tags:
-      - api
-  /api/notes/:
-    get:
-      operationId: listNotes
-      description: "API endpoint for viewing and managing doctor's notes.\n\nNotes\
-        \ are simple annotations attached to a medication.\nSupported operations:\n\
-        \    - GET /notes/          - list all notes\n    - GET /notes/{id}/     -\
-        \ retrieve a single note\n    - POST /notes/         - create a new note\n\
-        \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\
-        \ intentionally not supported."
-      parameters:
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Note'
-          description: ''
-      tags:
-      - api
-    post:
-      operationId: createNote
-      description: "API endpoint for viewing and managing doctor's notes.\n\nNotes\
-        \ are simple annotations attached to a medication.\nSupported operations:\n\
-        \    - GET /notes/          - list all notes\n    - GET /notes/{id}/     -\
-        \ retrieve a single note\n    - POST /notes/         - create a new note\n\
-        \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\
-        \ intentionally not supported."
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Note'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Note'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Note'
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Note'
-          description: ''
-      tags:
-      - api
-  /api/notes/{id}/:
-    get:
-      operationId: retrieveNote
-      description: "API endpoint for viewing and managing doctor's notes.\n\nNotes\
-        \ are simple annotations attached to a medication.\nSupported operations:\n\
-        \    - GET /notes/          - list all notes\n    - GET /notes/{id}/     -\
-        \ retrieve a single note\n    - POST /notes/         - create a new note\n\
-        \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\
-        \ intentionally not supported."
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this Doctor's note.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Note'
-          description: ''
-      tags:
-      - api
-    delete:
-      operationId: destroyNote
-      description: "API endpoint for viewing and managing doctor's notes.\n\nNotes\
-        \ are simple annotations attached to a medication.\nSupported operations:\n\
-        \    - GET /notes/          - list all notes\n    - GET /notes/{id}/     -\
-        \ retrieve a single note\n    - POST /notes/         - create a new note\n\
-        \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\
-        \ intentionally not supported."
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this Doctor's note.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
-      tags:
-      - api
-components:
-  schemas:
-    Medication:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 100
-        dosage_mg:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-        prescribed_per_day:
-          type: integer
-          maximum: 2147483647
-          description: Expected number of doses per day
-          minimum: 0
-        adherence:
-          type: string
-          readOnly: true
-      required:
-      - name
-      - dosage_mg
-      - prescribed_per_day
-    DoseLog:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        medication:
-          type: integer
-        taken_at:
-          type: string
-          format: date-time
-        was_taken:
-          type: boolean
-      required:
-      - medication
-      - taken_at
-    Note:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        medication:
-          type: integer
-        text:
-          type: string
-        created_at:
-          type: string
-          format: date
-          readOnly: true
-      required:
-      - medication
-      - text
+      - notes
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Doctor's note.
+      required: true
+      type: integer
+definitions:
+  DoseLog:
+    required:
+    - medication
+    - taken_at
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      medication:
+        title: Medication
+        type: integer
+      taken_at:
+        title: Taken at
+        type: string
+        format: date-time
+      was_taken:
+        title: Was taken
+        type: boolean
+  Medication:
+    required:
+    - name
+    - dosage_mg
+    - prescribed_per_day
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      dosage_mg:
+        title: Dosage mg
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      prescribed_per_day:
+        title: Prescribed per day
+        description: Expected number of doses per day
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      adherence:
+        title: Adherence
+        type: string
+        readOnly: true
+  Note:
+    required:
+    - medication
+    - text
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      medication:
+        title: Medication
+        type: integer
+      text:
+        title: Text
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date
+        readOnly: true

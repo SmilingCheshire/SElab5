@@ -71,3 +71,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'medtracker.urls.api_info',
+}
