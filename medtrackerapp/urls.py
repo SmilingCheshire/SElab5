@@ -1,6 +1,7 @@
 from django.utils import timezone
 from .models import Note
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
 
@@ -18,7 +19,10 @@ def days_since(date):
     delta = now.date() - date
     return delta.days
 
+router = DefaultRouter()
+router.register(r'medications', views.MedicationViewSet, basename='medication')
+router.register(r'notes', views.NoteViewSet, basename='note')
+
 urlpatterns = [
-    path("notes/", views.note_list, name="note-list"),
-    path("notes/<int:pk>/", views.note_detail, name="note-detail"),
+    path('', include(router.urls)),
 ]
