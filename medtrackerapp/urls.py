@@ -19,11 +19,12 @@ def days_since(date):
     delta = now.date() - date
     return delta.days
 
+
 router = DefaultRouter()
-router.register(r'medications', views.MedicationViewSet, basename='medication')
-router.register(r'logs', views.DoseLogViewSet, basename='doselog')
-router.register(r'notes', views.NoteViewSet, basename='note')
+router.register(r"medications", views.MedicationViewSet, basename="medication")
+router.register(r"logs", views.DoseLogViewSet, basename="doselog")
+router.register(r"notes", views.NoteViewSet, basename="note")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]
