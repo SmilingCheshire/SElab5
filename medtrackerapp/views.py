@@ -5,6 +5,7 @@ from django.utils.dateparse import parse_date
 from .models import Medication, DoseLog, Note
 from medtrackerapp.models import Medication
 from .serializers import MedicationSerializer, DoseLogSerializer, NoteSerializer
+from rest_framework.filters import SearchFilter
 
 class MedicationViewSet(viewsets.ModelViewSet):
     """
@@ -170,5 +171,7 @@ class NoteViewSet(
     Updating existing notes is intentionally not supported.
     """
 
+    filter_backends = (SearchFilter,)
+    search_fields = ['medication__name']
     queryset = Note.objects.select_related("medication").all()
     serializer_class = NoteSerializer

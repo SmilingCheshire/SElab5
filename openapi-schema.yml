@@ -434,7 +434,13 @@ paths:
         \ retrieve a single note\n    - POST /notes/         - create a new note\n\
         \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\
         \ intentionally not supported."
-      parameters: []
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -491,6 +497,12 @@ paths:
         description: A unique integer value identifying this Doctor's note.
         schema:
           type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -513,6 +525,12 @@ paths:
         in: path
         required: true
         description: A unique integer value identifying this Doctor's note.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
         schema:
           type: string
       responses:
