@@ -1,27 +1,19 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import MedicationViewSet, DoseLogViewSet, NoteViewSet
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework.permissions import AllowAny
+import datetime, os
+from django.utils import timezone
+from .models import Note
+from .models import Medicament
 
-router = DefaultRouter()
-router.register("medications", MedicationViewSet, basename="medication")
-router.register("logs", DoseLogViewSet, basename="doselog")
-router.register(r"notes",       NoteViewSet,      basename="note")
 
-schema_view = get_schema_view(
-   openapi.Info(
-      title="Software engineering lab",
-      default_version="v1",
-      description="API documentation for the lab",
-   ),
-   public=True,
-   permission_classes=(AllowAny,),
-   authentication_classes=[],
-)
+def last_notes_for_med(med_id:int, limit=10):
+    notes = Note.objects.filter(medication_id=med_id).order_by('-created_at')
+    result=[]
+    for n in notes[:limit]:
+        if n.text != None:
+            result.append(n.text)
+    return result
 
-urlpatterns = [
-    path("", include(router.urls)),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-]
+
+def days_since(date):
+    now = timezone.now()
+    delta = now.date() - date
+    return delta.days

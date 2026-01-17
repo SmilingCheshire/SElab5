@@ -1,0 +1,46 @@
+warning: in the working copy of 'openapi-schema.yml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/openapi-schema.yml b/openapi-schema.yml[m
+[1mindex 4963436..c7d72d4 100644[m
+[1m--- a/openapi-schema.yml[m
+[1m+++ b/openapi-schema.yml[m
+[36m@@ -434,7 +434,13 @@[m [mpaths:[m
+         \ retrieve a single note\n    - POST /notes/         - create a new note\n\[m
+         \    - DELETE /notes/{id}/  - delete a note\n\nUpdating existing notes is\[m
+         \ intentionally not supported."[m
+[31m-      parameters: [][m
+[32m+[m[32m      parameters:[m
+[32m+[m[32m      - name: search[m
+[32m+[m[32m        required: false[m
+[32m+[m[32m        in: query[m
+[32m+[m[32m        description: A search term.[m
+[32m+[m[32m        schema:[m
+[32m+[m[32m          type: string[m
+       responses:[m
+         '200':[m
+           content:[m
+[36m@@ -491,6 +497,12 @@[m [mpaths:[m
+         description: A unique integer value identifying this Doctor's note.[m
+         schema:[m
+           type: string[m
+[32m+[m[32m      - name: search[m
+[32m+[m[32m        required: false[m
+[32m+[m[32m        in: query[m
+[32m+[m[32m        description: A search term.[m
+[32m+[m[32m        schema:[m
+[32m+[m[32m          type: string[m
+       responses:[m
+         '200':[m
+           content:[m
+[36m@@ -515,6 +527,12 @@[m [mpaths:[m
+         description: A unique integer value identifying this Doctor's note.[m
+         schema:[m
+           type: string[m
+[32m+[m[32m      - name: search[m
+[32m+[m[32m        required: false[m
+[32m+[m[32m        in: query[m
+[32m+[m[32m        description: A search term.[m
+[32m+[m[32m        schema:[m
+[32m+[m[32m          type: string[m
+       responses:[m
+         '204':[m
+           description: ''[m
