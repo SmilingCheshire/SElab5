@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import timedelta
 
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -92,8 +92,8 @@ class MedicationViewTests(APITestCase):
     def test_update_medication_invalid_data(self):
         url = reverse("medication-detail", args=[self.med.id])
         payload = {
-            "name": "",           # invalid
-            "dosage_mg": -10,     # invalid
+            "name": "",  # invalid
+            "dosage_mg": -10,  # invalid
             "prescribed_per_day": 0,
         }
 
@@ -116,7 +116,6 @@ class MedicationViewTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    
     def test_expected_doses_valid_days(self):
         """
         GET /api/medications/<id>/expected-doses/?days=7
@@ -253,4 +252,6 @@ class DoseLogViewTests(APITestCase):
 
         # if your view returns 400 for invalid range, this passes;
         # if it returns 200 + empty list, change assertion accordingly:
-        self.assertIn(response.status_code, (status.HTTP_400_BAD_REQUEST, status.HTTP_200_OK))
+        self.assertIn(
+            response.status_code, (status.HTTP_400_BAD_REQUEST, status.HTTP_200_OK)
+        )

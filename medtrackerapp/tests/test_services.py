@@ -18,9 +18,7 @@ class DrugInfoServiceTests(TestCase):
         mock_response.status_code = 200
         mock_response.raise_for_status.return_value = None
         mock_response.json.return_value = {
-            "results": [
-                {"id": "123", "drug_name": "aspirin"}
-            ]
+            "results": [{"id": "123", "drug_name": "aspirin"}]
         }
         mock_get.return_value = mock_response
 
